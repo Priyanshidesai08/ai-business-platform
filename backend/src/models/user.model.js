@@ -23,3 +23,15 @@ export const findUserById = async (id) => {
   );
   return result.rows[0];
 };
+
+export const updateUserById = async (id, { name }) => {
+  const result = await query(
+    `UPDATE users
+     SET name = COALESCE($2, name)
+     WHERE id = $1
+     RETURNING id, name, email, role, created_at`,
+    [id, name ?? null]
+  );
+
+  return result.rows[0];
+};

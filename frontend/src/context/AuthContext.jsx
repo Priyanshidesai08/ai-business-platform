@@ -47,6 +47,11 @@ export const AuthProvider = ({ children }) => {
     setUser(data.user);
   }, []);
 
+  const updateUser = useCallback((nextUser) => {
+    setUser(nextUser);
+    localStorage.setItem('user', JSON.stringify(nextUser));
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       if (token) {
@@ -68,9 +73,10 @@ export const AuthProvider = ({ children }) => {
       isAuthenticated: Boolean(token && user),
       register,
       login,
-      logout
+      logout,
+      updateUser
     }),
-    [token, user, loading, register, login, logout]
+    [token, user, loading, register, login, logout, updateUser]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

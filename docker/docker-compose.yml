@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ../database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
@@ -23,13 +23,16 @@ services:
       context: ../backend
     container_name: ai-business-platform-backend
     restart: unless-stopped
+    command: sh -c "npm run migrate && npm start"
     env_file:
       - ../backend/.env
     environment:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/ai_business_platform
       CLIENT_URL: http://localhost:5173
+    volumes:
+      - ../database:/database:ro
     ports:
-      - "5000:5000"
+      - "5001:5000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -38,11 +41,11 @@ services:
     build:
       context: ../frontend
       args:
-        VITE_API_URL: http://localhost:5000
+        VITE_API_URL: http://localhost:5001
     container_name: ai-business-platform-frontend
     restart: unless-stopped
     ports:
-      - "5173:80"
+      - "5174:80"
     depends_on:
       backend:
         condition: service_started

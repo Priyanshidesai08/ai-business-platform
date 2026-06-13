@@ -1,4 +1,4 @@
-import { registerUser, loginUser, logoutUser } from '../services/auth.service.js';
+import { registerUser, loginUser, logoutUser, updateProfile as updateProfileService } from '../services/auth.service.js';
 
 export const register = async (req, res, next) => {
   try {
@@ -26,6 +26,15 @@ export const logout = async (req, res, next) => {
   try {
     await logoutUser(req.token);
     res.status(200).json({ message: 'Logout successful' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateProfile = async (req, res, next) => {
+  try {
+    const user = await updateProfileService(req.user.id, req.body);
+    res.status(200).json({ message: 'Profile updated successfully', user });
   } catch (error) {
     next(error);
   }

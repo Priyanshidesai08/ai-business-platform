@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ApiError } from '../utils/apiError.js';
 import { signToken } from '../utils/token.js';
 import { sanitizeUser } from '../utils/sanitizeUser.js';
-import { createUser, findUserByEmail } from '../models/user.model.js';
+import { createUser, findUserByEmail, findUserById, updateUserById } from '../models/user.model.js';
 import { createSession, revokeSessionByToken } from '../models/session.model.js';
 
 export const registerUser = async ({ name, email, password }) => {
@@ -43,4 +43,20 @@ export const loginUser = async ({ email, password }) => {
 
 export const logoutUser = async (token) => {
   await revokeSessionByToken(token);
+};
+
+export const updateProfile = async (userId, payload) => {
+  const currentUser = await findUserById(userId);
+
+  if (!currentUser) {
+    throw new ApiError(404, 'User not found');
+  }
+
+  const nextName = payload.name?.trim();
+  if (!nextName) {
+    throw new ApiError(400, 'Name is required');
+  }
+
+  const updatedUser = await updateUserById(userId, { name: nextName });
+  return sanitizeUser(updatedUser);
 };

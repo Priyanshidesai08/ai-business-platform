@@ -14,6 +14,11 @@ export default [
       sourceType: 'module',
       globals: {
         document: 'readonly',
+        fetch: 'readonly',
+        Blob: 'readonly',
+        TextDecoder: 'readonly',
+        URL: 'readonly',
+        navigator: 'readonly',
         localStorage: 'readonly',
         process: 'readonly',
         window: 'readonly'

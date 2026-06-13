@@ -3,6 +3,12 @@ import express from 'express';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import authRoutes from './routes/auth.routes.js';
+import aiRoutes from './modules/ai/ai.routes.js';
+import salesRoutes from './modules/sales-agent/sales.routes.js';
+import marketingRoutes from './modules/marketing-agent/marketing.routes.js';
+import supportRoutes from './modules/support-agent/support.routes.js';
+import analyticsRoutes from './modules/analytics-agent/analytics.routes.js';
+import orchestratorRoutes from './modules/orchestrator/orchestrator.routes.js';
 import { swaggerDocs, swaggerUi } from './docs/swagger.js';
 import { env } from './config/env.js';
 import { notFoundHandler, errorHandler } from './middlewares/error.middleware.js';
@@ -33,6 +39,12 @@ app.get('/api-docs.json', (_req, res) => {
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/auth', authRoutes);
+app.use('/ai', aiRoutes);
+app.use('/sales', salesRoutes);
+app.use('/marketing', marketingRoutes);
+app.use('/support', supportRoutes);
+app.use('/analytics', analyticsRoutes);
+app.use('/orchestrator', orchestratorRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

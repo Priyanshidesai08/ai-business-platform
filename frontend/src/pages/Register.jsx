@@ -1,12 +1,17 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { UserPlus } from 'lucide-react';
 import AuthLayout from '../components/AuthLayout.jsx';
 import FormField from '../components/FormField.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
+import Button from '../components/ui/Button.jsx';
+import Card from '../components/ui/Card.jsx';
+import { useToast } from '../context/ToastContext.jsx';
 
 const Register = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const { pushToast } = useToast();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -22,60 +27,61 @@ const Register = () => {
 
     try {
       await register(form);
+      pushToast({ tone: 'success', title: 'Account created', message: 'You can log in with your new credentials.' });
       navigate('/login');
     } catch (apiError) {
       setError(apiError.response?.data?.message || 'Registration failed');
+      pushToast({ tone: 'error', title: 'Registration failed', message: apiError.response?.data?.message || 'Please review the form and try again.' });
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <AuthLayout title="Create account" subtitle="Register a workspace user for secured platform access.">
-      <form className="space-y-5" onSubmit={handleSubmit}>
-        {error ? <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div> : null}
-        <FormField
-          id="name"
-          label="Full name"
-          name="name"
-          type="text"
-          autoComplete="name"
-          value={form.name}
-          onChange={updateField}
-          required
-        />
-        <FormField
-          id="email"
-          label="Email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          value={form.email}
-          onChange={updateField}
-          required
-        />
-        <FormField
-          id="password"
-          label="Password"
-          name="password"
-          type="password"
-          autoComplete="new-password"
-          minLength={8}
-          value={form.password}
-          onChange={updateField}
-          required
-        />
-        <button
-          type="submit"
-          disabled={submitting}
-          className="min-h-11 w-full rounded-md bg-accent px-4 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
-        >
-          {submitting ? 'Creating account...' : 'Register'}
-        </button>
-      </form>
-      <p className="mt-5 text-center text-sm text-slate-600">
+    <AuthLayout title="Create account" subtitle="Register a workspace user with secure access to the platform.">
+      <Card className="border-0 bg-transparent p-0 shadow-none">
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          {error ? <div className="rounded-2xl border border-red-200 bg-red-50 px-3 py-3 text-sm text-red-700">{error}</div> : null}
+          <FormField
+            id="name"
+            label="Full name"
+            name="name"
+            type="text"
+            autoComplete="name"
+            value={form.name}
+            onChange={updateField}
+            required
+          />
+          <FormField
+            id="email"
+            label="Email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            value={form.email}
+            onChange={updateField}
+            required
+          />
+          <FormField
+            id="password"
+            label="Password"
+            name="password"
+            type="password"
+            autoComplete="new-password"
+            minLength={8}
+            value={form.password}
+            onChange={updateField}
+            required
+          />
+          <Button type="submit" variant="primary" className="w-full">
+            <UserPlus size={16} />
+            {submitting ? 'Creating account...' : 'Register'}
+          </Button>
+        </form>
+      </Card>
+      <p className="mt-5 text-center text-sm text-[var(--ui-text-muted)]">
         Already registered?{' '}
-        <Link className="font-semibold text-accent hover:text-blue-700" to="/login">
+        <Link className="font-semibold text-[var(--ui-accent)] hover:text-[var(--ui-accent-strong)]" to="/login">
           Login
         </Link>
       </p>

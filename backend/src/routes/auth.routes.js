@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { login, logout, profile, register } from '../controllers/auth.controller.js';
+import { login, logout, profile, register, updateProfile } from '../controllers/auth.controller.js';
 import { authenticate } from '../middlewares/auth.middleware.js';
 import { validate } from '../middlewares/validate.middleware.js';
-import { loginSchema, registerSchema } from '../validators/auth.validator.js';
+import { loginSchema, registerSchema, updateProfileSchema } from '../validators/auth.validator.js';
 
 const router = Router();
 
@@ -39,8 +39,21 @@ const router = Router();
  *     responses:
  *       201:
  *         description: Registration successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Registration successful
+ *               user:
+ *                 id: 11111111-1111-1111-1111-111111111111
+ *                 name: Priya Sharma
+ *                 email: priya@example.com
+ *                 role: user
  *       409:
  *         description: Email is already registered
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Email already registered
  */
 router.post('/register', validate(registerSchema), register);
 
@@ -67,8 +80,22 @@ router.post('/register', validate(registerSchema), register);
  *     responses:
  *       200:
  *         description: Login successful
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Login successful
+ *               token: eyJhbGciOi...
+ *               user:
+ *                 id: 11111111-1111-1111-1111-111111111111
+ *                 name: Priya Sharma
+ *                 email: priya@example.com
+ *                 role: user
  *       401:
  *         description: Invalid email or password
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Invalid email or password
  */
 router.post('/login', validate(loginSchema), login);
 
@@ -87,6 +114,35 @@ router.post('/login', validate(loginSchema), login);
  *         description: Unauthorized
  */
 router.get('/profile', authenticate, profile);
+
+/**
+ * @swagger
+ * /auth/profile:
+ *   put:
+ *     summary: Update the authenticated user profile
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [name]
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Priya Sharma
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *       400:
+ *         description: Validation failed
+ *       401:
+ *         description: Unauthorized
+ */
+router.put('/profile', authenticate, validate(updateProfileSchema), updateProfile);
 
 /**
  * @swagger

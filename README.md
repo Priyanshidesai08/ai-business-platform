@@ -1,6 +1,15 @@
 # Multi-Agent AI Business Automation Platform
 
-Phase 1 builds the foundation for authentication, dashboard access, secured APIs, PostgreSQL persistence, Swagger documentation, and Dockerized backend services.
+This repository contains the Phase 1, Phase 2, and Phase 3 implementation of the Multi-Agent AI Business Automation Platform.
+
+Current scope:
+
+- Authentication and profile management
+- Dashboard and protected routes
+- Sales, marketing, support, analytics, AI, and orchestration modules
+- Shared Gemini-backed AI service
+- Dockerized local development
+- Swagger API documentation
 
 ## Project Structure
 
@@ -40,7 +49,7 @@ npm run dev
 - API health: http://localhost:5000/health
 - Swagger: http://localhost:5000/api-docs
 
-## Live Backend Verification
+## Backend Verification
 
 Once the backend is running against PostgreSQL, run the smoke test:
 
@@ -57,6 +66,7 @@ This validates:
 - Login returns a JWT
 - Protected profile access works
 - Logout revokes the session
+- Profile updates persist through `PUT /auth/profile`
 
 ## Full Stack Verification
 
@@ -73,11 +83,50 @@ This script:
 - runs the backend smoke test
 - runs browser E2E checks for register, login redirect, refresh persistence, profile access, and unauthorized redirect
 
-To also create and push a GitHub repository after GitHub login:
+## Phase 2
 
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/verify-phase1.ps1 -RepoName your-repo-name
+Phase 2 adds the sales, marketing, support, analytics, and shared AI modules.
+
+Run the new migration and backend smoke checks:
+
+```bash
+cd backend
+npm run migrate
+npm run phase2-smoke
 ```
+
+Run the Phase 2 browser flow:
+
+```bash
+cd frontend
+npx playwright test tests/phase2.spec.js
+```
+
+## Phase 3
+
+Phase 3 adds multi-agent communication, orchestration, shared context, and AI decision routing.
+
+Run the Phase 3 smoke flow:
+
+```bash
+cd backend
+npm run test:integration
+```
+
+The orchestrator endpoints are documented in Swagger and can be exercised with the sample Postman collection at `docs/postman_collection.json`.
+
+## What Was Verified
+
+- Backend build and unit tests
+- Backend integration tests
+- Frontend build
+- Frontend browser checks for module navigation and collaboration
+- Responsive behavior on mobile and tablet widths
+
+## Final Notes
+
+- A final report is available at `docs/final-report-phase3.md`
+- Sample seed data is available at `database/seed.sql`
 
 ## Demo Flow
 
