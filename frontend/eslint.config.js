@@ -18,7 +18,10 @@ export default [
         Blob: 'readonly',
         TextDecoder: 'readonly',
         URL: 'readonly',
+        console: 'readonly',
         navigator: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
         localStorage: 'readonly',
         process: 'readonly',
         window: 'readonly'

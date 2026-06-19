@@ -1,6 +1,7 @@
 import { env } from '../../config/env.js';
 import { fetchOne, execute } from '../../shared/db.js';
 import { getCachedGeneration, setCachedGeneration } from './ai.cache.js';
+import { assembleAiContext } from '../../services/ai/index.js';
 
 export const parseAiJson = (text) => {
   if (!text) return {};
@@ -138,6 +139,30 @@ export const createAiService = ({ fetchImpl = fetch, executeFn = execute, fetchO
 const defaultAi = createAiService();
 
 export const generateAiResponse = defaultAi.generateAiResponse;
+
+export const generateContextualAiResponse = async ({ userId, module, promptId, template, input = {}, context = {}, cacheKey, metadata = {} }) => {
+  const assembled = await assembleAiContext({
+    userId,
+    module,
+    template,
+    promptId,
+    input,
+    context
+  });
+
+  const result = await generateAiResponse({
+    userId,
+    module,
+    prompt: assembled.assembledPrompt,
+    cacheKey,
+    metadata
+  });
+
+  return {
+    ...result,
+    context: assembled
+  };
+};
 
 export const loadLatestGeneration = async (userId, module) =>
   fetchOne(

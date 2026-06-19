@@ -29,4 +29,4 @@
 - Frontend: `cd frontend && npm install && npm run dev`
 - Docker: `docker compose -f docker/docker-compose.yml up --build`
 - Smoke test: `cd backend && npm run smoke`
-- Swagger: `http://localhost:5000/api-docs`
+- Swagger: `http://localhost:5001/api-docs`

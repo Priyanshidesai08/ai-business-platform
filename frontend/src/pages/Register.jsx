@@ -8,6 +8,17 @@ import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 
+const getAuthErrorMessage = (apiError, fallback) => {
+  if (!apiError) return fallback;
+  if (!apiError.response) return 'Cannot connect to backend';
+  const status = apiError.response.status;
+  const message = apiError.response.data?.message;
+  if (status === 409) return message || 'Email already registered';
+  if (status === 400) return message || 'Please fix the highlighted fields';
+  if (status >= 500) return 'Server error';
+  return message || fallback;
+};
+
 const Register = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
@@ -30,8 +41,17 @@ const Register = () => {
       pushToast({ tone: 'success', title: 'Account created', message: 'You can log in with your new credentials.' });
       navigate('/login');
     } catch (apiError) {
-      setError(apiError.response?.data?.message || 'Registration failed');
-      pushToast({ tone: 'error', title: 'Registration failed', message: apiError.response?.data?.message || 'Please review the form and try again.' });
+      console.error('Register failed', {
+        status: apiError.response?.status,
+        message: apiError.response?.data?.message,
+        details: apiError.response?.data?.details
+      });
+      const message = getAuthErrorMessage(apiError, 'Registration failed');
+      const validationMessage = Array.isArray(apiError.response?.data?.details)
+        ? apiError.response.data.details.map((detail) => detail.message).join(' ')
+        : '';
+      setError(validationMessage || message);
+      pushToast({ tone: 'error', title: message, message: validationMessage || apiError.response?.data?.message || 'Please review the form and try again.' });
     } finally {
       setSubmitting(false);
     }

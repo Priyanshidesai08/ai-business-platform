@@ -28,7 +28,7 @@ services:
       - ../backend/.env
     environment:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/ai_business_platform
-      CLIENT_URL: http://localhost:5173
+      CLIENT_URL: http://localhost:5173,http://localhost:5174
     volumes:
       - ../database:/database:ro
     ports:

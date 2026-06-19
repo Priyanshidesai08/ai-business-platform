@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { login, logout, profile, register, updateProfile } from '../controllers/auth.controller.js';
+import { forgotPassword, login, logout, profile, register, resetPassword, updateProfile } from '../controllers/auth.controller.js';
 import { authenticate } from '../middlewares/auth.middleware.js';
 import { validate } from '../middlewares/validate.middleware.js';
-import { loginSchema, registerSchema, updateProfileSchema } from '../validators/auth.validator.js';
+import { forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema, updateProfileSchema } from '../validators/auth.validator.js';
 
 const router = Router();
 
@@ -98,6 +98,55 @@ router.post('/register', validate(registerSchema), register);
  *               message: Invalid email or password
  */
 router.post('/login', validate(loginSchema), login);
+
+/**
+ * @swagger
+ * /auth/forgot-password:
+ *   post:
+ *     summary: Send a password reset link
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email]
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: priya@example.com
+ *     responses:
+ *       200:
+ *         description: Reset link sent
+ */
+router.post('/forgot-password', validate(forgotPasswordSchema), forgotPassword);
+
+/**
+ * @swagger
+ * /auth/reset-password:
+ *   post:
+ *     summary: Reset a password with a one-time token
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [token, password]
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 example: abc123token
+ *               password:
+ *                 type: string
+ *                 example: SecurePass123
+ *     responses:
+ *       200:
+ *         description: Password reset successful
+ */
+router.post('/reset-password', validate(resetPasswordSchema), resetPassword);
 
 /**
  * @swagger

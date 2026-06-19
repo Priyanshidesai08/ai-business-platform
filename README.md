@@ -1,15 +1,32 @@
 # Multi-Agent AI Business Automation Platform
 
-This repository contains the Phase 1, Phase 2, and Phase 3 implementation of the Multi-Agent AI Business Automation Platform.
+This repository contains the full multi-phase implementation of the Multi-Agent AI Business Automation Platform, including authentication, AI modules, orchestration, workflows, builder UX, and monitoring.
 
 Current scope:
 
 - Authentication and profile management
 - Dashboard and protected routes
-- Sales, marketing, support, analytics, AI, and orchestration modules
+- Sales, marketing, support, analytics, AI, orchestration, workflow, builder, and monitoring modules
 - Shared Gemini-backed AI service
 - Dockerized local development
 - Swagger API documentation
+
+## Current Entry Points
+
+- Frontend: http://localhost:5174
+- Backend health: http://localhost:5001/health
+- Swagger UI: http://localhost:5001/api-docs
+- Forgot password: http://localhost:5174/forgot-password
+
+## Release Docs
+
+- [Setup Guide](docs/SETUP_GUIDE.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Feature Matrix](docs/FEATURE_MATRIX.md)
+- [API Guide](docs/API_GUIDE.md)
+- [Demo Script](docs/DEMO_SCRIPT.md)
+- [Final Report](docs/FINAL_REPORT.md)
+- [Deployment Status](docs/DEPLOYMENT_STATUS.md)
 
 ## Project Structure
 
@@ -45,9 +62,10 @@ npm run dev
 
 4. Open:
 
-- Frontend: http://localhost:5173
-- API health: http://localhost:5000/health
-- Swagger: http://localhost:5000/api-docs
+- Frontend: http://localhost:5174
+- API health: http://localhost:5001/health
+- Swagger: http://localhost:5001/api-docs
+- Forgot password: http://localhost:5174/forgot-password
 
 ## Backend Verification
 
@@ -115,6 +133,16 @@ npm run test:integration
 
 The orchestrator endpoints are documented in Swagger and can be exercised with the sample Postman collection at `docs/postman_collection.json`.
 
+## Deployment Status
+
+The app is prepared for production-style deployment, but live public URLs for frontend, backend, and Swagger depend on your chosen hosting providers and credentials. The current verified local URLs are:
+
+- Frontend: http://localhost:5174
+- Backend: http://localhost:5001
+- Swagger: http://localhost:5001/api-docs
+
+See [Deployment Status](docs/DEPLOYMENT_STATUS.md) for the exact public-deployment checklist.
+
 ## What Was Verified
 
 - Backend build and unit tests
@@ -122,11 +150,13 @@ The orchestrator endpoints are documented in Swagger and can be exercised with t
 - Frontend build
 - Frontend browser checks for module navigation and collaboration
 - Responsive behavior on mobile and tablet widths
+- Forgot password / reset password flow
+- Browser verified export downloads for analytics, marketing, and workflow center
 
 ## Final Notes
 
-- A final report is available at `docs/final-report-phase3.md`
 - Sample seed data is available at `database/seed.sql`
+- Phase 6 and Phase 7 release reports are available in the repo root
 
 ## Demo Flow
 

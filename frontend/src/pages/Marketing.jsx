@@ -8,7 +8,7 @@ import Input from '../components/ui/Input.jsx';
 import Badge from '../components/ui/Badge.jsx';
 import EmptyState from '../components/ui/EmptyState.jsx';
 import { useToast } from '../context/ToastContext.jsx';
-import { Megaphone, Save, Wand2, Sparkles, Repeat2 } from 'lucide-react';
+import { Download, Megaphone, Save, Wand2, Sparkles, Repeat2 } from 'lucide-react';
 
 const baseForm = { audience: '', objective: '', tone: 'professional', platform: 'linkedin' };
 
@@ -31,6 +31,25 @@ const Marketing = () => {
     setContent(data);
     pushToast({ tone: 'success', title: 'Content generated', message: 'Draft saved for review.' });
     await load();
+  };
+
+  const exportCampaign = () => {
+    const payload = {
+      generatedAt: new Date().toISOString(),
+      form,
+      content,
+      campaigns
+    };
+    const blob = new globalThis.Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = globalThis.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `campaign-export-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => globalThis.URL.revokeObjectURL(url), 1000);
+    pushToast({ tone: 'success', title: 'Export downloaded', message: 'Campaign package is ready.' });
   };
 
   return (
@@ -80,6 +99,7 @@ const Marketing = () => {
                   <div className="flex items-center gap-2">
                     <Button variant="secondary"><Repeat2 size={16} /> Regenerate</Button>
                     <Button variant="secondary"><Save size={16} /> Save</Button>
+                    <Button variant="secondary" onClick={exportCampaign}><Download size={16} /> Export Campaign</Button>
                   </div>
                 </div>
                 <pre className="mt-3 overflow-auto text-sm">{JSON.stringify(content, null, 2)}</pre>

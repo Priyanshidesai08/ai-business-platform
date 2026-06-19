@@ -8,6 +8,16 @@ import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 
+const getAuthErrorMessage = (apiError, fallback) => {
+  if (!apiError) return fallback;
+  if (!apiError.response) return 'Cannot connect to backend';
+  const status = apiError.response.status;
+  const message = apiError.response.data?.message;
+  if (status === 401) return message || 'Invalid email or password';
+  if (status >= 500) return 'Server error';
+  return message || fallback;
+};
+
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -30,8 +40,14 @@ const Login = () => {
       pushToast({ tone: 'success', title: 'Welcome back', message: 'You are now signed in.' });
       navigate('/dashboard');
     } catch (apiError) {
-      setError(apiError.response?.data?.message || 'Login failed');
-      pushToast({ tone: 'error', title: 'Login failed', message: apiError.response?.data?.message || 'Please check your credentials.' });
+      console.error('Login failed', {
+        status: apiError.response?.status,
+        message: apiError.response?.data?.message,
+        details: apiError.response?.data?.details
+      });
+      const message = getAuthErrorMessage(apiError, 'Login failed');
+      setError(message);
+      pushToast({ tone: 'error', title: message, message: apiError.response?.data?.message || 'Please check your credentials.' });
     } finally {
       setSubmitting(false);
     }
@@ -62,6 +78,11 @@ const Login = () => {
             onChange={updateField}
             required
           />
+          <div className="flex justify-end">
+            <Link className="text-sm font-semibold text-[var(--ui-accent)] hover:text-[var(--ui-accent-strong)]" to="/forgot-password">
+              Forgot Password?
+            </Link>
+          </div>
           <Button type="submit" variant="primary" className="w-full">
             <LogIn size={16} />
             {submitting ? 'Signing in...' : 'Login'}

@@ -1,6 +1,6 @@
 import assert from 'assert/strict';
 
-const baseUrl = process.env.API_URL || 'http://localhost:5000';
+const baseUrl = process.env.API_URL || 'http://localhost:5001';
 
 const request = async (path, options = {}) => {
   const response = await fetch(`${baseUrl}${path}`, {

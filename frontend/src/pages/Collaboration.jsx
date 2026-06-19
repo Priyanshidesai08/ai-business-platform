@@ -148,7 +148,7 @@ const Collaboration = () => {
   };
 
   const readStream = async (payload, attempt = 0) => {
-    const response = await globalThis.fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/orchestrator/stream`, {
+    const response = await globalThis.fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/orchestrator/stream`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token') || ''}` },
       body: JSON.stringify(payload)
@@ -200,7 +200,9 @@ const Collaboration = () => {
     const a = document.createElement('a');
     a.href = url;
     a.download = `orchestration-run-${runId}.json`;
+    document.body.appendChild(a);
     a.click();
+    a.remove();
     globalThis.URL.revokeObjectURL(url);
   };
 
@@ -591,7 +593,9 @@ const Collaboration = () => {
                       const a = document.createElement('a');
                       a.href = url;
                       a.download = 'orchestration-telemetry.json';
+                      document.body.appendChild(a);
                       a.click();
+                      a.remove();
                       globalThis.URL.revokeObjectURL(url);
                     }}
                     className="inline-flex items-center gap-2 rounded-xl border border-[var(--ui-border)] px-3 py-2 text-sm transition hover:bg-[var(--ui-surface-muted)]"

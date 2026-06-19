@@ -1,4 +1,4 @@
-const baseUrl = process.env.API_URL || 'http://localhost:5000';
+const baseUrl = process.env.API_URL || 'http://localhost:5001';
 const uniqueEmail = `phase1_${Date.now()}@example.com`;
 const password = 'SecurePass123';
 
